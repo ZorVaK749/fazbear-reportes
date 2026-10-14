@@ -1,6 +1,7 @@
 package com.fazbear.reportes.listener;
 
 import com.fazbear.reportes.model.PedidoEvent;
+import com.fazbear.reportes.config.RabbitMQConfig;
 import com.fazbear.reportes.service.ReportesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public class PedidoListener {
         this.reportesService = reportesService;
     }
 
-    @RabbitListener(queues = "pedido.creado.queue")
+    @RabbitListener(queues = RabbitMQConfig.QUEUE)
     public void onPedidoCreado(PedidoEvent evento) {
         log.info("Evento recibido en reportes: pedidoId={}", evento.getPedidoId());
         reportesService.registrarVenta(evento);

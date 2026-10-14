@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ public class ReportesService {
             evento.getPedidoId(),
             evento.getUsuarioId(),
             evento.getTotal(),
-            evento.getFechaCreacion()
+            LocalDateTime.parse(evento.getFechaCreacion())
         );
         ventaLogRepository.save(venta);
         log.info("Venta registrada en reportes: pedidoId={}, total={}", evento.getPedidoId(), evento.getTotal());
@@ -49,7 +51,7 @@ public class ReportesService {
         long       totalPedidos = ventaLogRepository.count();
         BigDecimal ingresos     = ventaLogRepository.sumTotalIngresos();
         BigDecimal promedio     = totalPedidos > 0
-            ? ingresos.divide(BigDecimal.valueOf(totalPedidos), 2, BigDecimal.ROUND_HALF_UP)
+            ? ingresos.divide(BigDecimal.valueOf(totalPedidos), 2, RoundingMode.HALF_UP)
             : BigDecimal.ZERO;
 
         Map<String, Object> res = new HashMap<>();
